@@ -10,6 +10,6 @@ services:
     environment:
       - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=ignite
-      - POSTGRES_DB=rentx
+      - POSTGRES_DB=rentxx
     volumes:
       - ./pgdata:/data/postgres

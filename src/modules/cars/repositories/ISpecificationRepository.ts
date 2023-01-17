@@ -1,5 +1,4 @@
-import { Specification } from "../entities/Specification";
-import { ICreateCategoryDTO } from "./ICategoriesRepository";
+import { Specification } from "../infra/typeorm/entities/Specification";
 
 interface ICreateSpecificationDTO {
   name: string;
