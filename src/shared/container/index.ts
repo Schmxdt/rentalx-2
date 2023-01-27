@@ -5,7 +5,7 @@ import "./providers"
 import { UsersRepository } from "@modules/accounts/infra/typeorm/repositories/UsersRepository";
 import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
 
-import { CarsRepository } from "@modules/cars/infra/typeorm/repositories/CarsRepository";
+
 import { CategoriesRepository } from "@modules/cars/infra/typeorm/repositories/CategoriesRepository";
 
 import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
@@ -21,6 +21,7 @@ import { CarsImagesRepository } from "@modules/cars/infra/typeorm/repositories/C
 
 import { IRentalsRepository } from "@modules/rentals/repositories/IRentalsRepository";
 import { RentalsRepository } from "@modules/rentals/infra/typeorm/repositories/RentalsRepository";
+import { CarsRepository } from "@modules/cars/infra/typeorm/repositories/CarsRepository";
 
 // ICategoriesRepository
 container.registerSingleton<ICategoriesRepository>(
