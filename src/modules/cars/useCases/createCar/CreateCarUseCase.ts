@@ -1,8 +1,9 @@
 import { inject, injectable } from "tsyringe";
 
-import { Car } from "@modules/cars/infra/typeorm/entities/Cars";
+
 import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
 import { AppError } from "@shared/errors/AppError";
+import { Car } from "@modules/cars/infra/typeorm/entities/Car";
 
 interface IRequest {
   name: string;
@@ -34,7 +35,7 @@ class CreateCarUseCase {
     );
 
     if (carAlreadyExists) {
-      throw new AppError("Car already exists");
+      throw new AppError("Car Already Exists!");
     }
 
     const car = await this.carsRepository.create({

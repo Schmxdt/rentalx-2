@@ -5,7 +5,8 @@ import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
 
 import { AppError } from "@shared/errors/AppError";
 import { ISpecificationsRepository } from "@modules/cars/repositories/ISpecificationRepository";
-import { Car } from "@modules/cars/infra/typeorm/entities/Cars";
+import { Car } from "@modules/cars/infra/typeorm/entities/Car";
+
 
 interface IRequest {
   car_id: string;

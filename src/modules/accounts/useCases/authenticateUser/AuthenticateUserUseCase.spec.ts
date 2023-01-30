@@ -55,6 +55,6 @@ describe("Authenticate User", () => {
         email: user.email,
         password: "incorrectPassword",
       });
-    }).rejects.toBeInstanceOf(AppError);
+    }).rejects.toEqual(new AppError("Email or password incorrect"));
   });
 });
