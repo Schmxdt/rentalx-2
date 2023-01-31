@@ -1,8 +1,8 @@
-interface ICreateRentalDTO {
+interface ICreateOwnerDTO {
   id: string;
   nome: string;
   celular: number;
   inativo: boolean
 }
 
-export { ICreateRentalDTO };
+export { ICreateOwnerDTO };
