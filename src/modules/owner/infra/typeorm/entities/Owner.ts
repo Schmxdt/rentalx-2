@@ -13,7 +13,7 @@ class Owner {
   celular: string;
 
   @Column()
-  isAdmin: boolean;
+  inativo: boolean;
 
   constructor() {
     if (!this.id) {

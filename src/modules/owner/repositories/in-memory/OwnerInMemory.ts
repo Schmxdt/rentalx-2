@@ -1,12 +1,11 @@
-import { ICreateOwnerDTO } from "@modules/owner/dtos/ICreateOwnerDTO";
+import { IOwnerDTO } from "@modules/owner/dtos/IOwnerDTO";
 
 
-class OwnerInMemory implements ICreateOwnerDTO {
+class OwnerInMemory implements IOwnerDTO {
   id: string;
-  nome: string;
-  celular: number;
+  name: string;
+  celular: string;
   inativo: boolean;
-
 }
 
 export { OwnerInMemory };

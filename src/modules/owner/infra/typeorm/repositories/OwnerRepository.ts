@@ -1,18 +1,31 @@
-import { ICreateOwnerDTO } from "@modules/owner/dtos/ICreateOwnerDTO";
 import { getRepository, Repository } from "typeorm";
+
 import { Owner } from "../entities/Owner";
 
-class OwnerRepository implements ICreateOwnerDTO {
+import { IOwnerDTO } from "@modules/owner/dtos/IOwnerDTO";
+import { IOwnerRepository } from "@modules/owner/repositories/IOwnerRepository";
+
+class OwnerRepository implements IOwnerRepository {
   private repository: Repository<Owner>;
 
   constructor() {
     this.repository = getRepository(Owner);
   }
-  id: string;
-  nome: string;
-  celular: number;
-  inativo: boolean;
 
+  async create({
+    name,
+    inativo,
+    celular
+  }: IOwnerDTO): Promise<Owner> {
+    const owner = this.repository.create({
+      name,
+      inativo,
+      celular
+    });
+
+    await this.repository.save(owner);
+
+    return owner;
+  }
 }
-
 export { OwnerRepository };

@@ -22,6 +22,8 @@ import { CarsImagesRepository } from "@modules/cars/infra/typeorm/repositories/C
 import { IRentalsRepository } from "@modules/rentals/repositories/IRentalsRepository";
 import { RentalsRepository } from "@modules/rentals/infra/typeorm/repositories/RentalsRepository";
 import { CarsRepository } from "@modules/cars/infra/typeorm/repositories/CarsRepository";
+import { IOwnerRepository } from "@modules/owner/repositories/IOwnerRepository";
+import { OwnerRepository } from "@modules/owner/infra/typeorm/repositories/OwnerRepository";
 
 // ICategoriesRepository
 container.registerSingleton<ICategoriesRepository>(
@@ -42,3 +44,4 @@ container.registerSingleton<ICarsImagesRepository>("CarsImagesRepository", CarsI
 
 container.registerSingleton<IRentalsRepository>("RentalsRepository", RentalsRepository);
 
+container.registerSingleton<IOwnerRepository>("OwnerRepository", OwnerRepository)
