@@ -8,7 +8,7 @@ interface IOwnerRepository {
   create(data: IOwnerDTO): Promise<Owner>;
 
   //delete
-  delete(user: IOwnerDTO, id: string): Promise<Owner>;
+  delete(id: string): Promise<Owner>;
 }
 
 export { IOwnerRepository };

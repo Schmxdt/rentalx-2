@@ -11,6 +11,10 @@ class OwnerRepository implements IOwnerRepository {
   constructor() {
     this.repository = getRepository(Owner);
   }
+  async delete(id: string): Promise<any> {
+
+    return await this.repository.delete(id);
+  }
 
   async create({
     name,
