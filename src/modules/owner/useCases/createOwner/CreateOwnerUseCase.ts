@@ -1,15 +1,12 @@
+import { inject, injectable } from "tsyringe";
+
 import { IOwnerDTO } from "@modules/owner/dtos/IOwnerDTO";
 import { Owner } from "@modules/owner/infra/typeorm/entities/Owner";
 import { IOwnerRepository } from "@modules/owner/repositories/IOwnerRepository";
 
 
-
-
-import { inject, injectable } from "tsyringe";
-
-
 interface IRequest {
-  id: IOwnerDTO
+  id: string,
   name: string,
   celular: string,
   inativo: boolean,
@@ -23,11 +20,13 @@ class CreateOwnerUseCase {
   ) { }
 
   async execute({
+    id,
     name,
     celular,
     inativo
   }: IRequest): Promise<Owner> {
     const owner = await this.ownerRepository.create({
+      id,
       name,
       celular,
       inativo
