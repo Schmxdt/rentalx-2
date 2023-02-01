@@ -6,7 +6,7 @@ import { IOwnerDTO } from "@modules/owner/dtos/IOwnerDTO";
 import { IOwnerRepository } from "@modules/owner/repositories/IOwnerRepository";
 
 
-import { HttpResponse, notFound, ok, serverError } from "@shared/helpers/http";
+import { HttpResponse, noContent, notFound, ok, serverError } from "@shared/helpers/http";
 
 
 class OwnerRepository implements IOwnerRepository {
@@ -14,6 +14,33 @@ class OwnerRepository implements IOwnerRepository {
 
   constructor() {
     this.repository = getRepository(Owner);
+  }
+
+  // read
+
+  async get(id: string): Promise<HttpResponse> {
+
+    try {
+      const owner = await this.repository.createQueryBuilder('owner')
+        .select([
+          'owner.id as "id"',
+          'owner.name as "name"',
+          'owner.celular as "celular"',
+          'owner.inativo as "inativo"',
+        ])
+        .where('owner.id = :id', { id })
+        .getRawOne()
+
+      if (typeof owner === 'undefined') {
+        return noContent()
+      }
+
+      console.log(owner)
+
+      return ok(owner)
+    } catch (err) {
+      return serverError(err)
+    }
   }
 
   // update
