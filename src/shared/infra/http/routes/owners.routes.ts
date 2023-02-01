@@ -7,13 +7,9 @@ import { Router } from "express";
 
 const ownersRoutes = Router()
 
-
 ownersRoutes.post('/', new CreateOwnerController().handle)
-
 ownersRoutes.delete('/:id', new DeleteOwnerController().handle)
-
 ownersRoutes.put('/:id', new UpdateOwnerController().handle)
-
-ownersRoutes.put('/:id', new ReadOwnerController().handle)
+ownersRoutes.get('/:id', new ReadOwnerController().handle)
 
 export { ownersRoutes }
