@@ -13,6 +13,9 @@ interface IOwnerRepository {
 
   // update
   update(data: IOwnerDTO): Promise<HttpResponse>
+
+  // get
+  get(id: string): Promise<HttpResponse>
 }
 
 export { IOwnerRepository };
