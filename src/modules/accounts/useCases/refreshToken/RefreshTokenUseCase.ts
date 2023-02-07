@@ -1,64 +1,71 @@
 import { inject, injectable } from "tsyringe";
-import { v4 as uuidV4 } from "uuid";
-import { resolve } from "path";
+import { verify, sign } from "jsonwebtoken";
 
-import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
 import { IUsersTokensRepository } from "@modules/accounts/repositories/IUsersTokensRepository";
+import auth from "@config/auth";
 import { AppError } from "@shared/errors/AppError";
 import { IDateProvider } from "@shared/container/providers/DateProvider/IDateProvider";
-import { IMailProvider } from "@shared/container/providers/MailProvider/IMailProvider";
+
+interface IPayload {
+  sub: string;
+  email: string;
+}
+
+interface ITokenResponse {
+  token: string;
+  refresh_token: string;
+}
 
 @injectable()
-class SendForgotPasswordMailUseCase {
+class RefreshTokenUseCase {
   constructor(
-    @inject("UsersRepository")
-    private usersRepository: IUsersRepository,
     @inject("UsersTokensRepository")
     private usersTokensRepository: IUsersTokensRepository,
     @inject("DayjsDateProvider")
-    private dateProvider: IDateProvider,
-    @inject("MailProvider")
-    private mailProvider: IMailProvider
+    private dateProvider: IDateProvider
   ) { }
 
-  async execute(email: string): Promise<void> {
-    const user = await this.usersRepository.findByEmail(email);
+  async execute(token: string): Promise<ITokenResponse> {
+    const { email, sub } = verify(token, auth.secret_refresh_token) as IPayload;
 
-    const templatePath = resolve(
-      __dirname,
-      "..",
-      "..",
-      "views",
-      "emails",
-      "forgotPassword.hbs"
+    const user_id = sub;
+
+    const userToken = await this.usersTokensRepository.findByUserIdAndRefreshToken(
+      user_id,
+      token
     );
 
-    if (!user) {
-      throw new AppError("User does not exists!");
+    if (!userToken) {
+      throw new AppError("Refresh Token does not exists!");
     }
 
-    const token = uuidV4();
+    await this.usersTokensRepository.deleteById(userToken.id);
 
-    const expires_date = this.dateProvider.addHours(3);
-
-    await this.usersTokensRepository.create({
-      refresh_token: token,
-      user_id: user.id,
-      expires_date,
+    const refresh_token = sign({ email }, auth.secret_refresh_token, {
+      subject: sub,
+      expiresIn: auth.expires_in_refresh_token,
     });
 
-    const variables = {
-      name: user.name,
-      link: `${process.env.FORGOT_MAIL_URL}${token}`,
-    };
-
-    await this.mailProvider.sendMail(
-      email,
-      "Recuperação de Senha",
-      variables,
-      templatePath
+    const expires_date = this.dateProvider.addDays(
+      auth.expires_refresh_token_days
     );
+
+    await this.usersTokensRepository.create({
+      expires_date,
+      refresh_token,
+      user_id,
+    });
+
+    const newToken = sign({}, auth.secret_token, {
+      subject: user_id,
+      expiresIn: auth.expires_in_token,
+    });
+
+    return {
+      refresh_token,
+      token: newToken,
+    };
   }
 }
 
-export { SendForgotPasswordMailUseCase };
+export { RefreshTokenUseCase };

@@ -7,6 +7,8 @@ import { IUsersTokensRepository } from "@modules/accounts/repositories/IUsersTok
 import { AppError } from "@shared/errors/AppError";
 import { IDateProvider } from "@shared/container/providers/DateProvider/IDateProvider";
 import { IMailProvider } from "@shared/container/providers/MailProvider/IMailProvider";
+import { EtherealMailProvider } from "@shared/container/providers/MailProvider/implementations/EtherealMailProvider";
+import { MailProviderInMemory } from "@shared/container/providers/MailProvider/in-memory/MailProviderInMemory";
 
 @injectable()
 class SendForgotPasswordMailUseCase {
@@ -17,13 +19,13 @@ class SendForgotPasswordMailUseCase {
     private usersTokensRepository: IUsersTokensRepository,
     @inject("DayjsDateProvider")
     private dateProvider: IDateProvider,
-    @inject("MailProvider")
-    private mailProvider: IMailProvider
+    // @inject("MailProvider")
+    // private mailProvider: MailProviderInMemory
   ) { }
 
   async execute(email: string): Promise<void> {
-    const user = await this.usersRepository.findByEmail(email);
 
+    const user = await this.usersRepository.findByEmail(email);
     const templatePath = resolve(
       __dirname,
       "..",
@@ -52,7 +54,11 @@ class SendForgotPasswordMailUseCase {
       link: `${process.env.FORGOT_MAIL_URL}${token}`,
     };
 
-    await this.mailProvider.sendMail(
+
+    const mail = new EtherealMailProvider()
+    console.log(mail)
+
+    await mail.sendMail(
       email,
       "Recuperação de Senha",
       variables,

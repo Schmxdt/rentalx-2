@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">36.61% </span>
+                <span class="strong">28.12% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>26/71</span>
+                <span class='fraction'>18/64</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">36.61% </span>
+                <span class="strong">28.12% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>26/71</span>
+                <span class='fraction'>18/64</span>
             </div>
         
             
@@ -126,22 +126,7 @@
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -159,11 +144,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -204,83 +190,76 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import { inject, injectable } from "tsyringe";
-import { verify, sign } from "jsonwebtoken";
+import { v4 as uuidV4 } from "uuid";
+import { resolve } from "path";
 &nbsp;
+import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
 import { IUsersTokensRepository } from "@modules/accounts/repositories/IUsersTokensRepository";
-import auth from "@config/auth";
 import { AppError } from "@shared/errors/AppError";
 import { IDateProvider } from "@shared/container/providers/DateProvider/IDateProvider";
-&nbsp;
-interface IPayload {
-  sub: string;
-  email: string;
-}
-&nbsp;
-interface ITokenResponse {
-  token: string;
-  refresh_token: string;
-}
+import { IMailProvider } from "@shared/container/providers/MailProvider/IMailProvider";
 &nbsp;
 @injectable()
-class RefreshTokenUseCase {
+class SendForgotPasswordMailUseCase {
 <span class="fstat-no" title="function not covered" >  constructor(</span>
+<span class="cstat-no" title="statement not covered" >    @inject("UsersRepository")</span>
+<span class="cstat-no" title="statement not covered" >    private usersRepository: IUsersRepository,</span>
 <span class="cstat-no" title="statement not covered" >    @inject("UsersTokensRepository")</span>
 <span class="cstat-no" title="statement not covered" >    private usersTokensRepository: IUsersTokensRepository,</span>
 <span class="cstat-no" title="statement not covered" >    @inject("DayjsDateProvider")</span>
-<span class="cstat-no" title="statement not covered" >    private dateProvider: IDateProvider</span>
+<span class="cstat-no" title="statement not covered" >    private dateProvider: IDateProvider,</span>
+<span class="cstat-no" title="statement not covered" >    @inject("MailProvider")</span>
+<span class="cstat-no" title="statement not covered" >    private mailProvider: IMailProvider</span>
 <span class="cstat-no" title="statement not covered" >  ) { }</span>
 &nbsp;
-  async <span class="fstat-no" title="function not covered" >execute(token: string): Promise&lt;ITokenResponse&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const { email, sub } = verify(token, auth.secret_refresh_token) as IPayload;</span>
+  async <span class="fstat-no" title="function not covered" >execute(email: string): Promise&lt;void&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    const user = await this.usersRepository.findByEmail(email);</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const user_id = sub;</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const userToken = await this.usersTokensRepository.findByUserIdAndRefreshToken(</span>
-<span class="cstat-no" title="statement not covered" >      user_id,</span>
-<span class="cstat-no" title="statement not covered" >      token</span>
+<span class="cstat-no" title="statement not covered" >    const templatePath = resolve(</span>
+<span class="cstat-no" title="statement not covered" >      __dirname,</span>
+<span class="cstat-no" title="statement not covered" >      "..",</span>
+<span class="cstat-no" title="statement not covered" >      "..",</span>
+<span class="cstat-no" title="statement not covered" >      "views",</span>
+<span class="cstat-no" title="statement not covered" >      "emails",</span>
+<span class="cstat-no" title="statement not covered" >      "forgotPassword.hbs"</span>
 <span class="cstat-no" title="statement not covered" >    );</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    if (!userToken) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new AppError("Refresh Token does not exists!");</span>
+<span class="cstat-no" title="statement not covered" >    if (!user) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new AppError("User does not exists!");</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    await this.usersTokensRepository.deleteById(userToken.id);</span>
+<span class="cstat-no" title="statement not covered" >    const token = uuidV4();</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const refresh_token = sign({ email }, auth.secret_refresh_token, {</span>
-<span class="cstat-no" title="statement not covered" >      subject: sub,</span>
-<span class="cstat-no" title="statement not covered" >      expiresIn: auth.expires_in_refresh_token,</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const expires_date = this.dateProvider.addDays(</span>
-<span class="cstat-no" title="statement not covered" >      auth.expires_refresh_token_days</span>
-<span class="cstat-no" title="statement not covered" >    );</span>
+<span class="cstat-no" title="statement not covered" >    const expires_date = this.dateProvider.addHours(3);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    await this.usersTokensRepository.create({</span>
+<span class="cstat-no" title="statement not covered" >      refresh_token: token,</span>
+<span class="cstat-no" title="statement not covered" >      user_id: user.id,</span>
 <span class="cstat-no" title="statement not covered" >      expires_date,</span>
-<span class="cstat-no" title="statement not covered" >      refresh_token,</span>
-<span class="cstat-no" title="statement not covered" >      user_id,</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const newToken = sign({}, auth.secret_token, {</span>
-<span class="cstat-no" title="statement not covered" >      subject: user_id,</span>
-<span class="cstat-no" title="statement not covered" >      expiresIn: auth.expires_in_token,</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      refresh_token,</span>
-<span class="cstat-no" title="statement not covered" >      token: newToken,</span>
+<span class="cstat-no" title="statement not covered" >    const variables = {</span>
+<span class="cstat-no" title="statement not covered" >      name: user.name,</span>
+<span class="cstat-no" title="statement not covered" >      link: `${process.env.FORGOT_MAIL_URL}${token}`,</span>
 <span class="cstat-no" title="statement not covered" >    };</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    await this.mailProvider.sendMail(</span>
+<span class="cstat-no" title="statement not covered" >      email,</span>
+<span class="cstat-no" title="statement not covered" >      "Recuperação de Senha",</span>
+<span class="cstat-no" title="statement not covered" >      variables,</span>
+<span class="cstat-no" title="statement not covered" >      templatePath</span>
+<span class="cstat-no" title="statement not covered" >    );</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 }
 &nbsp;
-export { RefreshTokenUseCase };</pre></td></tr></table></pre>
+export { SendForgotPasswordMailUseCase };</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-02-06T16:42:08.692Z
+                at 2023-02-06T18:02:35.371Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
