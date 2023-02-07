@@ -4,8 +4,6 @@ import "./providers"
 
 import { UsersRepository } from "@modules/accounts/infra/typeorm/repositories/UsersRepository";
 import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
-
-
 import { CategoriesRepository } from "@modules/cars/infra/typeorm/repositories/CategoriesRepository";
 import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
 import { ICategoriesRepository } from "@modules/cars/repositories/ICategoriesRepository";
@@ -22,31 +20,12 @@ import { IUsersTokensRepository } from "@modules/accounts/repositories/IUsersTok
 import { UsersTokensRepository } from "@modules/accounts/infra/typeorm/repositories/UsersTokensRepository";
 
 // ICategoriesRepository
-container.registerSingleton<ICategoriesRepository>(
-  "CategoriesRepository",
-  CategoriesRepository
-);
-container.registerSingleton<ISpecificationsRepository>(
-  "SpecificationsRepository",
-  SpecificationsRepository
-);
-container.registerSingleton<IUsersRepository>(
-  "UsersRepository",
-  UsersRepository
-);
-container.registerSingleton<IUsersTokensRepository>(
-  "UsersTokensRepository",
-  UsersTokensRepository
-);
+container.registerSingleton<ICategoriesRepository>("CategoriesRepository", CategoriesRepository);
+container.registerSingleton<ISpecificationsRepository>("SpecificationsRepository", SpecificationsRepository);
+container.registerSingleton<IUsersRepository>("UsersRepository", UsersRepository);
+container.registerSingleton<IUsersTokensRepository>("UsersTokensRepository", UsersTokensRepository);
 container.registerSingleton<ICarsRepository>("CarsRepository", CarsRepository);
-
 container.registerSingleton<ICarsImagesRepository>("CarsImagesRepository", CarsImagesRepository);
-
 container.registerSingleton<IRentalsRepository>("RentalsRepository", RentalsRepository);
-
 container.registerSingleton<IOwnerRepository>("OwnerRepository", OwnerRepository)
-
-container.registerSingleton<IUsersTokensRepository>(
-  "UsersTokensRepository",
-  UsersTokensRepository
-);
+container.registerSingleton<IUsersTokensRepository>("UsersTokensRepository", UsersTokensRepository);
